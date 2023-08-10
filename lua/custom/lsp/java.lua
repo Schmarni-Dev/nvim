@@ -1,6 +1,7 @@
 local opts = {
 	cmd = {},
 	settings = {
+		autostart = false,
 		java = {
 			signatureHelp = { enabled = true },
 			completion = {
@@ -69,11 +70,11 @@ local function setup()
 		workspace_dir,
 	}
 
----@diagnostic disable-next-line: unused-local
+	---@diagnostic disable-next-line: unused-local
 	local on_attach = function(client, bufnr)
 		-- vim.lsp.codelens.refresh()
 		-- if JAVA_DAP_ACTIVE then
-		jdtls.setup_dap({ hotcodereplace = "auto" ,config_overrides =  {} })
+		jdtls.setup_dap({ hotcodereplace = "auto", config_overrides = {} })
 		jdtls.dap.setup_dap_main_class_configs()
 		-- end
 	end

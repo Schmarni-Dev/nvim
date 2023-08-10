@@ -431,7 +431,10 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
+  -- tsserver = {}
+  jdtls = {
+    autostart = false,
+  },
 
   lua_ls = {
     Lua = {
