@@ -443,8 +443,11 @@ local servers = {
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   jdtls = {
+    cmd = {},
     autostart = false,
-    filetypes = {},
+    settings = {
+      autostart = false,
+    },
   },
 
   lua_ls = {
