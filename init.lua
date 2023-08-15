@@ -433,7 +433,11 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {}
   jdtls = {
+    cmd = {},
     autostart = false,
+    settings = {
+      autostart = false,
+    },
   },
 
   lua_ls = {

@@ -1,8 +1,12 @@
 local opts = {
 	cmd = {},
+
+	autostart = false,
 	settings = {
 		autostart = false,
 		java = {
+
+			autostart = false,
 			signatureHelp = { enabled = true },
 			completion = {
 				favoriteStaticMembers = {},
