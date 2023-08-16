@@ -1,12 +1,8 @@
 local opts = {
 	cmd = {},
-
-	autostart = false,
+	filetypes = { "class", "java" },
 	settings = {
-		autostart = false,
 		java = {
-
-			autostart = false,
 			signatureHelp = { enabled = true },
 			completion = {
 				favoriteStaticMembers = {},
@@ -32,22 +28,15 @@ local opts = {
 				useBlocks = true,
 			},
 			configuration = {
-				runtimes = {
-					{
-						name = "JavaSE-1.8",
-						path =
-						"/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home",
-						default = true,
-					},
-					{
-						name = "JavaSE-17",
-						path = "/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home",
-					},
-					{
-						name = "JavaSE-19",
-						path = "/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/Home",
-					},
-				},
+				-- runtimes = {
+				-- 	
+				-- 	{
+				-- 		name = "JavaSE-17",
+				-- 		path = "/usr/lib/jvm/java-17-openjdk",
+				-- 		default = true,
+				-- 	},
+				-- 	
+				-- },
 			},
 		},
 	},
@@ -78,8 +67,9 @@ local function setup()
 	local on_attach = function(client, bufnr)
 		-- vim.lsp.codelens.refresh()
 		-- if JAVA_DAP_ACTIVE then
-		jdtls.setup_dap({ hotcodereplace = "auto", config_overrides = {} })
-		jdtls.dap.setup_dap_main_class_configs()
+		-- jdtls.setup_dap({ hotcodereplace = "auto", config_overrides = {} })
+		-- jdtls.dap.setup_dap_main_class_configs()
+		GLOBAL_ON_ATTACH(client,bufnr)
 		-- end
 	end
 
