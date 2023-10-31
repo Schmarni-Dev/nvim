@@ -104,6 +104,10 @@ require('lazy').setup({
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
 
+      -- Adds Path completion capabilities
+      'hrsh7th/cmp-path',
+
+
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
     },
@@ -230,7 +234,7 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+-- vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -441,15 +445,21 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {
+    ["rust-analyzer"] = {
+      cargo = {
+        -- target = "wasm32-unknown-unknown"
+      },
+    },
+  },
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   jdtls = {},
-
+  tailwindcss = { filetypes = { "rust", "javascript" }, init_options = { userLanguages = { rust = "html" } } },
 
   lua_ls = {
     Lua = {
-      workspace = { checkThirdParty = false },
+      workspace = { library = { "~/lua_lsp_plugins" } },
       telemetry = { enable = false },
     },
   },
@@ -481,7 +491,7 @@ mason_lspconfig.setup_handlers {
   ["jdtls"] = function()
     local ls_conf = require("custom.lsp.java").setup()
 
-    require("jdtls").start_or_attach(ls_conf)
+    -- require("jdtls").start_or_attach(ls_conf)
   end
 }
 
@@ -530,6 +540,7 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'path' },
   },
 }
 
