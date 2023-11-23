@@ -162,12 +162,19 @@ require('lazy').setup({
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
+    main = "ibl",
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
+    -- opts = {
+    --   char = '┊',
+    --   show_trailing_blankline_indent = false,
+    -- },
+    ---@diagnostic disable-next-line: unused-local
+    init = function(self)
+      -- local conf = require("indent_blankline.ibl")
+      -- conf.indent.char = '┊'
+      -- conf.whitespace.remove_blankline_trail = false
+    end
   },
 
   -- "gc" to comment visual regions/lines
@@ -447,10 +454,17 @@ local servers = {
   -- pyright = {},
   rust_analyzer = {
     ["rust-analyzer"] = {
-      cargo = {
-        -- target = "wasm32-unknown-unknown"
-      },
+      check = {
+        command = "clippy"
+      }
     },
+
+  },
+  wgsl_analyzer = {
+    ["wgsl-analyzer"] = {
+      customImports = {
+      }
+    }
   },
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
