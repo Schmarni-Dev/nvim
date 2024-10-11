@@ -42,6 +42,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.cmd("set tabstop=4")
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -448,33 +449,50 @@ GLOBAL_ON_ATTACH = on_attach
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
-local servers = {
+local mason_servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  rust_analyzer = {
-    ["rust-analyzer"] = {
-      check = {
-        command = "clippy"
-      }
-    },
-
-  },
+  -- rust_analyzer = {
+  --   ["rust-analyzer"] = {
+  --     check = {
+  --       command = "clippy"
+  --     }
+  --   },
+  --
+  -- },
   wgsl_analyzer = {
     ["wgsl-analyzer"] = {
       customImports = {
-      }
+      },
+      server = { path = " ~/Code/wgsl-analyzer/target/release/wgsl_analyzer" }
     }
   },
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   jdtls = {},
-  tailwindcss = { filetypes = { "rust", "javascript" }, init_options = { userLanguages = { rust = "html" } } },
+  -- tailwindcss = { filetypes = { "rust", "javascript" }, init_options = { userLanguages = { rust = "html" } } },
 
   lua_ls = {
     Lua = {
       workspace = { library = { "~/lua_lsp_plugins" } },
       telemetry = { enable = false },
+    },
+  },
+}
+local servers = {
+  gdscript = {},
+  rust_analyzer = {
+    ["rust-analyzer"] = {
+      check = {
+        command = "clippy",
+        -- allTargets = true,
+      },
+      cargo = {
+        -- allTargets = true,
+        -- target = { "x86_64-unknown-linux-gnu", "wasm32-unknown-unknown", "aarch64-linux-android" }
+        -- target = "wasm32-unknown-unknown",
+      }
     },
   },
 }
@@ -490,7 +508,7 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
+  ensure_installed = vim.tbl_keys(mason_servers),
 }
 
 mason_lspconfig.setup_handlers {
@@ -498,8 +516,8 @@ mason_lspconfig.setup_handlers {
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
       on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
+      settings = mason_servers[server_name],
+      filetypes = (mason_servers[server_name] or {}).filetypes,
     }
   end,
   ["jdtls"] = function()
@@ -509,12 +527,30 @@ mason_lspconfig.setup_handlers {
   end
 }
 
+for server, config in pairs(servers) do
+  require('lspconfig')[server].setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = config,
+    filetypes = (config or {}).filetypes,
+  }
+end
+
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
+
+
+---@param entry cmp.Entry
+---@param ctx cmp.Context
+---@return boolean
+local function filter_lsp_suggestions(entry, ctx)
+  if string.match((entry:get_completion_item().labelDetails or {detail=""}).detail or "", "OwoColorize") then return false end
+  return true
+end
 
 cmp.setup {
   snippet = {
@@ -552,7 +588,7 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
-    { name = 'nvim_lsp' },
+    { name = 'nvim_lsp', entry_filter = filter_lsp_suggestions },
     { name = 'luasnip' },
     { name = 'path' },
   },
