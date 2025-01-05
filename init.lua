@@ -486,12 +486,9 @@ local servers = {
     ["rust-analyzer"] = {
       check = {
         command = "clippy",
-        -- allTargets = true,
       },
       cargo = {
-        -- allTargets = true,
-        -- target = { "x86_64-unknown-linux-gnu", "wasm32-unknown-unknown", "aarch64-linux-android" }
-        -- target = "wasm32-unknown-unknown",
+        targetDir = true
       }
     },
   },
@@ -548,7 +545,7 @@ luasnip.config.setup {}
 ---@param ctx cmp.Context
 ---@return boolean
 local function filter_lsp_suggestions(entry, ctx)
-  if string.match((entry:get_completion_item().labelDetails or {detail=""}).detail or "", "OwoColorize") then return false end
+  if string.match((entry:get_completion_item().labelDetails or { detail = "" }).detail or "", "OwoColorize") then return false end
   return true
 end
 
